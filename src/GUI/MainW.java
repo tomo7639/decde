@@ -23,23 +23,27 @@ import javax.swing.table.DefaultTableModel;
 
 import DBMS.AllReader;
 import DBMS.EmplReader;
+import DBMS.StatReader;
 import DBMS.TownReader;
+import GPS.DandTime;
 import GPS.Employee;
 import GPS.Town;
 
 import com.toedter.calendar.JDateChooser;
+import javax.swing.JLabel;
 
 public class MainW extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private JTable table;
+	private JTable tableRts;
 	private JComboBox<String> empCB;
 	private HashMap<Integer, Integer> posIDemp = new HashMap<Integer, Integer>();
 	private JComboBox<String> destCB;
 	private HashMap<Integer, Integer> posIDdest = new HashMap<Integer, Integer>();
 	private JComboBox<String> baseCB;
 	private HashMap<Integer, Integer> posIDbase = new HashMap<Integer, Integer>();	
+	private JTable tableStats;
 
 	/**
 	 * Launch the application.
@@ -67,7 +71,7 @@ public class MainW extends JFrame {
 	 */
 	public MainW() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 878, 483);
+		setBounds(100, 100, 878, 568);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -77,16 +81,16 @@ public class MainW extends JFrame {
 		scrollPane.setBounds(10, 69, 842, 191);
 		contentPane.add(scrollPane);
 		
-		table = new JTable();
-		table.addMouseListener(new MouseAdapter() {
+		tableRts = new JTable();
+		tableRts.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				if (e.getClickCount() == 2){
-					TrackViewer.displayMe((int)table.getValueAt(table.rowAtPoint(e.getPoint()) ,0));
+					TrackViewer.displayMe((int)tableRts.getValueAt(tableRts.rowAtPoint(e.getPoint()) ,0));
 				}
 			}
 		});
-		table.setModel(new DefaultTableModel(
+		tableRts.setModel(new DefaultTableModel(
 				new Object[][] {}, new String[] {"ID", "Employee", "Start Time", "End Time", "Destination", "Base", "Kilometres"}) {
 		    		private static final long serialVersionUID = 1L;
 		    		@Override
@@ -95,20 +99,22 @@ public class MainW extends JFrame {
 		    		}
 		});
 		
-		table.getColumnModel().getColumn(0).setPreferredWidth(19);
-		table.getColumnModel().getColumn(1).setPreferredWidth(174);
-		table.getColumnModel().getColumn(2).setPreferredWidth(139);
-		table.getColumnModel().getColumn(3).setPreferredWidth(139);
-		table.getColumnModel().getColumn(4).setPreferredWidth(70);
-		table.getColumnModel().getColumn(5).setPreferredWidth(70);
-		table.getColumnModel().getColumn(6).setPreferredWidth(45);
-		scrollPane.setViewportView(table);
+		tableRts.getColumnModel().getColumn(0).setPreferredWidth(19);
+		tableRts.getColumnModel().getColumn(1).setPreferredWidth(174);
+		tableRts.getColumnModel().getColumn(2).setPreferredWidth(139);
+		tableRts.getColumnModel().getColumn(3).setPreferredWidth(139);
+		tableRts.getColumnModel().getColumn(4).setPreferredWidth(70);
+		tableRts.getColumnModel().getColumn(5).setPreferredWidth(70);
+		tableRts.getColumnModel().getColumn(6).setPreferredWidth(45);
+		scrollPane.setViewportView(tableRts);
 		
 		empCB = new JComboBox<String>();
 		empCB.setModel(new DefaultComboBoxModel<String>(new String[] {"All"}));
 		empCB.setBounds(56, 48, 199, 20);
 		contentPane.add(empCB);
-		ArrayList<Employee> empls = EmplReader.getAllEmpNames();
+		EmplReader ER = new EmplReader();
+		ArrayList<Employee> empls = ER.getAllEmpNames();
+		ER.closeCnn();
 		for (int i=0;i<empls.size();i++){
 			Employee s = empls.get(i);
 			empCB.addItem(s.getFName()+" "+s.getSName()+" "+s.getDName());
@@ -148,38 +154,87 @@ public class MainW extends JFrame {
 		btnFilter.setBounds(10, 14, 89, 23);
 		contentPane.add(btnFilter);
 		
-		final JDateChooser dC1 = new JDateChooser();
-		dC1.setBounds(335, 27, 73, 20);
-		dC1.addPropertyChangeListener(new PropertyChangeListener() {
+		final JDateChooser stFromDC = new JDateChooser();
+		stFromDC.setBounds(335, 27, 73, 20);
+		stFromDC.addPropertyChangeListener(new PropertyChangeListener() {
 	        @Override
 	        public void propertyChange(PropertyChangeEvent evt) {
-	            //if(dC1.getDate()!=null) System.out.println(dC1.getDate().toString());
+	        	
 	        }
 	    }); 
-		contentPane.add(dC1);	
+		contentPane.add(stFromDC);	
 		
-		JDateChooser dateChooser = new JDateChooser();
-		dateChooser.setBounds(335, 48, 73, 20);
-		contentPane.add(dateChooser);
+		JDateChooser stToDC = new JDateChooser();
+		stToDC.setBounds(335, 48, 73, 20);
+		contentPane.add(stToDC);
 		
-		JDateChooser dateChooser_1 = new JDateChooser();
-		dateChooser_1.setBounds(499, 27, 73, 20);
-		contentPane.add(dateChooser_1);
+		JDateChooser endFromDC = new JDateChooser();
+		endFromDC.setBounds(499, 27, 73, 20);
+		contentPane.add(endFromDC);
 		
-		JDateChooser dateChooser_2 = new JDateChooser();
-		dateChooser_2.setBounds(499, 48, 73, 20);
-		contentPane.add(dateChooser_2);
+		JDateChooser endToDC = new JDateChooser();
+		endToDC.setBounds(499, 48, 73, 20);
+		contentPane.add(endToDC);
+		
+		JScrollPane scrollPane_1 = new JScrollPane();
+		scrollPane_1.setBounds(10, 314, 418, 204);
+		contentPane.add(scrollPane_1);
+		
+		tableStats = new JTable();
+		tableStats.setModel(new DefaultTableModel(
+			new Object[][] {
+			},
+			new String[] {
+				"ID", "Employee", "Driven kms"
+			}
+		));
+		tableStats.getColumnModel().getColumn(0).setPreferredWidth(31);
+		tableStats.getColumnModel().getColumn(1).setPreferredWidth(190);
+		scrollPane_1.setViewportView(tableStats);
+		
+		final JDateChooser kmsFromDC = new JDateChooser();
+		kmsFromDC.setBounds(69, 283, 96, 20);
+		contentPane.add(kmsFromDC);
+		
+		final JDateChooser kmsToDC = new JDateChooser();
+		kmsToDC.setBounds(233, 283, 96, 20);
+		contentPane.add(kmsToDC);
+		
+		JButton btnShow = new JButton("Show");
+		btnShow.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				DefaultTableModel dm = (DefaultTableModel) tableStats.getModel();
+				while(dm.getRowCount()>0){
+					dm.removeRow(0);
+				}
+				StatReader SR = new StatReader();
+				SR.read(tableStats, new DandTime(kmsFromDC.getDate()), new DandTime(kmsToDC.getDate()));
+				//SR.closeCnn();
+			}
+		});
+		btnShow.setBounds(339, 280, 89, 23);
+		contentPane.add(btnShow);
+		
+		JLabel lblBegin = new JLabel("Begin");
+		lblBegin.setBounds(27, 289, 46, 14);
+		contentPane.add(lblBegin);
+		
+		JLabel lblEnd = new JLabel("End");
+		lblEnd.setBounds(192, 289, 46, 14);
+		contentPane.add(lblEnd);
 				
 		update();
 	}
 	
 	private void update(){
-		DefaultTableModel dm = (DefaultTableModel) table.getModel();
+		DefaultTableModel dm = (DefaultTableModel) tableRts.getModel();
 		while(dm.getRowCount()>0){
 			dm.removeRow(0);
 		}
 		AllReader AR = new AllReader();
-		AR.read(table, posIDemp.get(empCB.getSelectedIndex()), posIDdest.get(destCB.getSelectedIndex()), posIDbase.get(baseCB.getSelectedIndex()));
+		AR.read(tableRts, posIDemp.get(empCB.getSelectedIndex()), posIDdest.get(destCB.getSelectedIndex()), posIDbase.get(baseCB.getSelectedIndex()));
 		AR.closeCnn();
 	}
+	
+	
 }

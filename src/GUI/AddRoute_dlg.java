@@ -137,7 +137,7 @@ public class AddRoute_dlg extends JDialog {
 			okButton.setBounds(188, 54, 47, 23);
 			okButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
-					SaveRoute();
+					SaveRoute(new GpxDecoder(fileCh.getText()));
 				}
 			});
 			buttonPane.setLayout(null);
@@ -173,12 +173,12 @@ public class AddRoute_dlg extends JDialog {
 			
 	}
 	
-	public void SaveRoute(){
+	private void SaveRoute(GpxDecoder GD){
 		ConnEst CE = new ConnEst();
 		CE.beginTrans();
 		
 		RouteSaver RS = new RouteSaver(CE.getCnn());
-		GpxDecoder GD = new GpxDecoder(fileCh.getText());
+	
 		Route rtToBeSaved = new Route(RS.getAutoIncrPK() ,GD.getStart(), GD.getEnd(), GD.GetRouteLen()); 
 		RS.save(rtToBeSaved);
 				

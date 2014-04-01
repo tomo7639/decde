@@ -44,6 +44,19 @@ public class RtTwSaver {
 		}	      
 	}
 	
+	public void deleteRow(int routeID){
+		Statement stmt;
+		try {
+			stmt = cnn.createStatement();
+			String sql = "DELETE FROM route_town "+
+						 "WHERE route_id = "+routeID;
+			stmt.executeUpdate(sql);
+		}
+		catch (SQLException e){
+			e.printStackTrace();
+		}
+	}
+	
 	public int getAutoIncrPK(){
 		return ++PKID;
 	}

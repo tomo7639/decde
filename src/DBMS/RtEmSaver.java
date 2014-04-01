@@ -30,6 +30,19 @@ public class RtEmSaver {
 		}		
 	}
 	
+	public void deleteRow(int routeID){
+		Statement stmt;
+		try {
+			stmt = cnn.createStatement();
+			String sql = "DELETE FROM route_employee "+
+						 "WHERE route_id = "+routeID;
+			stmt.executeUpdate(sql);
+		}
+		catch (SQLException e){
+			e.printStackTrace();
+		}
+	}
+	
 	public void save(int ID, int emID, int rtID){
 		Statement stmt;
 		try {

@@ -37,7 +37,7 @@ public class TownReader {
      		   				" AN"
      		   				+ "D LNG >"+ (place.getLng()-tolerance) +
      		   				" AND LNG <"+ (place.getLng()+tolerance) +";";
-			townsAcc = stmt.executeQuery( "SELECT * FROM cities WHERE "+statement );	
+			townsAcc = stmt.executeQuery( "SELECT * FROM town WHERE "+statement );	
 							
 		} catch (Exception e){
 			e.printStackTrace();
@@ -45,7 +45,7 @@ public class TownReader {
 		
 		try {
 			while(townsAcc.next()){
-				reslt.add(new Town(townsAcc.getString("town"), townsAcc.getFloat("lat"), townsAcc.getFloat("lng"), townsAcc.getInt("id")) );
+				reslt.add(new Town(townsAcc.getString("name"), townsAcc.getFloat("lat"), townsAcc.getFloat("lng"), townsAcc.getInt("id")) );
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -54,19 +54,39 @@ public class TownReader {
 		return reslt;
 	}
 	
+	public ArrayList<Town> getAllRouteTowns(int routeID){
+		ResultSet townsAcc;
+		ArrayList<Town> reslt = new ArrayList<Town>();
+		try {
+			Statement stmt = cnn.createStatement();
+			String statement = 	"SELECT t.* FROM town t "+
+								"JOIN route_town rt ON t.id = rt.town_id "+
+								"WHERE rt.route_id = " + routeID + " "+
+								"ORDER BY rt.id";
+			townsAcc = stmt.executeQuery( statement );
+			while(townsAcc.next()){
+				reslt.add(new Town(townsAcc.getString("name"), townsAcc.getFloat("lat"), townsAcc.getFloat("lng"), townsAcc.getInt("id")) );
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return reslt;
+	}
+	
 	public ArrayList<Town> getAllDestTowns(){
 		ResultSet townsAcc;
 		ArrayList<Town> reslt = new ArrayList<Town>();
 		try {
 			Statement stmt = cnn.createStatement();
-			String statement = "SELECT DISTINCT c.* from route r"
+			String statement = "SELECT DISTINCT t.* from route r"
 					+ "			JOIN(SELECT * FROM route_town "
 					+ "			WHERE id IN (SELECT max(id) FROM route_town"
-					+ "				GROUP BY route_id)) dest ON dest.route_id = r.rt_id"
-					+ "			JOIN cities c ON dest.town_id = c.id";
+					+ "				GROUP BY route_id)) dest ON dest.route_id = r.id"
+					+ "			JOIN town t ON dest.town_id = t.id";
 			townsAcc = stmt.executeQuery( statement );
 			while(townsAcc.next()){
-				reslt.add(new Town(townsAcc.getString("town"), townsAcc.getFloat("lat"), townsAcc.getFloat("lng"), townsAcc.getInt("id")) );
+				reslt.add(new Town(townsAcc.getString("name"), townsAcc.getFloat("lat"), townsAcc.getFloat("lng"), townsAcc.getInt("id")) );
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -80,14 +100,14 @@ public class TownReader {
 		ArrayList<Town> reslt = new ArrayList<Town>();
 		try {
 			Statement stmt = cnn.createStatement();
-			String statement = "SELECT DISTINCT c.* from route r"
+			String statement = "SELECT DISTINCT t.* FROM route r"
 					+ "			JOIN(SELECT * FROM route_town "
 					+ "			WHERE id IN (SELECT min(id) FROM route_town"
-					+ "				GROUP BY route_id)) base ON base.route_id = r.rt_id"
-					+ "			JOIN cities c ON base.town_id = c.id";
+					+ "				GROUP BY route_id)) base ON base.route_id = r.id"
+					+ "			JOIN town t ON base.town_id = t.id";
 			townsAcc = stmt.executeQuery( statement );
 			while(townsAcc.next()){
-				reslt.add(new Town(townsAcc.getString("town"), townsAcc.getFloat("lat"), townsAcc.getFloat("lng"), townsAcc.getInt("id")) );
+				reslt.add(new Town(townsAcc.getString("name"), townsAcc.getFloat("lat"), townsAcc.getFloat("lng"), townsAcc.getInt("id")) );
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -95,6 +115,8 @@ public class TownReader {
 		}
 		return reslt;
 	}
+	
+	
 	
 	public void closeCnn(){
 		try {

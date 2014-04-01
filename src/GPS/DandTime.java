@@ -20,6 +20,14 @@ public class DandTime {
 		}
 	}
 	
+	public boolean isNull(){
+		return (val == null);
+	}
+	
+	public DandTime(Date d){
+		this.val = d;
+	}
+	
 	public String getDT(){
 		SimpleDateFormat ft = new SimpleDateFormat ("yyyy-MM-dd HH:mm:ss"); 
 		return ft.format(val);

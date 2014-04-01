@@ -16,8 +16,8 @@ public class EmplSaver {
 		try {
 			this.cnn = con;
 			Statement max = cnn.createStatement();
-			ResultSet maxAcc = max.executeQuery( "SELECT emp_id FROM employees "
-					+ "									ORDER BY emp_id DESC"
+			ResultSet maxAcc = max.executeQuery( "SELECT id FROM employee "
+					+ "									ORDER BY id DESC"
 					+ "									LIMIT 1");
 			if(	maxAcc.next()){
 				PKID = maxAcc.getInt(1);
@@ -36,7 +36,7 @@ public class EmplSaver {
 		Statement stmt;
 		try {
 			stmt = cnn.createStatement();
-			String sql = "INSERT INTO employees " +
+			String sql = "INSERT INTO employee " +
 	                   "VALUES ("+em.getID()+",'"+em.getFName()+"','"+em.getSName()+"','"+em.getDName()+"')";
 			stmt.executeUpdate(sql);
 		} catch (SQLException e) {
@@ -44,7 +44,7 @@ public class EmplSaver {
 			e.printStackTrace();
 		}	      
 	}
-	
+		
 	public int getAutoIncrPK(){
 		return ++PKID;
 	}

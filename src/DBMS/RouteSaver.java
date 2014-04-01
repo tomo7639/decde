@@ -5,7 +5,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import GPS.DandTime;
 import GPS.Route;
 
 public class RouteSaver {
@@ -17,8 +16,8 @@ public class RouteSaver {
 		try {
 			this.cnn = con;
 			Statement max = cnn.createStatement();
-			ResultSet maxAcc = max.executeQuery( "SELECT rt_id FROM route "
-					+ "									ORDER BY rt_id DESC"
+			ResultSet maxAcc = max.executeQuery( "SELECT id FROM route "
+					+ "									ORDER BY id DESC"
 					+ "									LIMIT 1");	
 			if(	maxAcc.next()){
 				PKID = maxAcc.getInt(1);
@@ -30,6 +29,19 @@ public class RouteSaver {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}		
+	}
+	
+	public void deleteRow(int routeID){
+		Statement stmt;
+		try {
+			stmt = cnn.createStatement();
+			String sql = "DELETE FROM route "+
+						 "WHERE id = "+routeID;
+			stmt.executeUpdate(sql);
+		}
+		catch (SQLException e){
+			e.printStackTrace();
+		}
 	}
 	
 	public void save(Route rt){

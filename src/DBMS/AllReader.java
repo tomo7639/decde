@@ -12,12 +12,7 @@ import javax.swing.table.DefaultTableModel;
 public class AllReader {
 	
 	private Connection cnn;
-	
-	public static void main(String[] args){
 		
-	}
-	
-	
 	public AllReader(){
 		try {
 			cnn = DriverManager.getConnection(
@@ -25,8 +20,7 @@ public class AllReader {
 		}  catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-		
+		}		
 	}
 	
 	
@@ -36,36 +30,22 @@ public class AllReader {
 		
 		try {
 			Statement stmt = cnn.createStatement();
-			String statement = 	"SELECT emp_fname, emp_sname, emp_dname, rstart, rend, c.town, c2.town, kms, r.rt_id FROM route r "+
-								"JOIN route_employee re ON r.rt_id = re.rt_id "+
-								"JOIN employees e ON e.emp_id = re.emp_id "+
+			String statement = 	"SELECT emp_fname, emp_sname, emp_dname, rstart, rend, t.name, t2.name, kms, r.id FROM route r "+
+								"JOIN route_employee re ON r.id = re.route_id "+
+								"JOIN employee e ON e.id = re.employee_id "+
 								"JOIN(SELECT * FROM route_town "+
 								"	WHERE id IN (SELECT max(id) FROM route_town "+
-								"		GROUP BY route_id)) dest ON dest.route_id = r.rt_id "+
-								"JOIN cities c ON dest.town_id = c.id "+
+								"		GROUP BY route_id)) dest ON dest.route_id = r.id "+
+								"JOIN town t ON dest.town_id = t.id "+
 								"JOIN(SELECT * FROM route_town "+
 								"	WHERE id IN (SELECT min(id) FROM route_town "+
-								"		GROUP BY route_id)) base ON base.route_id = r.rt_id "+
-								"JOIN cities c2 ON base.town_id = c2.id ";
-			if (empID != null){
-				statement += "WHERE e.emp_id = "+empID+" ";
-			}
-			if (dTownID != null){
-				if (empID == null){
-					statement += "WHERE c.id = "+dTownID+" ";
-				}
-				else{
-					statement += "AND c.id = "+dTownID+" ";
-				}
-			}
-			if (bTownID != null){
-				if (empID == null && dTownID == null){
-					statement += "WHERE c2.id = "+bTownID+" ";
-				}
-				else{
-					statement += "AND c2.id = "+bTownID+" ";
-				}
-			}
+								"		GROUP BY route_id)) base ON base.route_id = r.id "+
+								"JOIN town t2 ON base.town_id = t2.id "+
+								"WHERE 1 = 1 ";
+			if (empID != null){statement += "AND e.id = "+empID+" ";}
+			if (dTownID != null){statement += "AND t.id = "+dTownID+" ";}
+			if (bTownID != null){statement += "AND t2.id = "+bTownID+" ";}
+			
 			Acc = stmt.executeQuery( statement );	
 							
 		} catch (Exception e){
