@@ -190,7 +190,7 @@ public class AddRoute_dlg extends JDialog {
 	
 		RtEmSaver RES = new RtEmSaver(CE.getCnn());
 		for (SelectEmpl e: emps){
-			RES.save(RES.getAutoIncrPK(), e.posID.get(e.empsCB.getSelectedIndex()), rtToBeSaved.getID());					
+			RES.save(RES.getAutoIncrPK(), e.getPosID().get(e.getEmpsCB().getSelectedIndex()), rtToBeSaved.getID());					
 		}
 		dispose();	
 		

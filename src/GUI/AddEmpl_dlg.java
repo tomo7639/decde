@@ -103,10 +103,8 @@ public class AddEmpl_dlg extends JDialog {
 						ES.save(toBeSaved);
 						CE.closeCnn();
 						
-						parent.empsCB.addItem(txtFName.getText()+" "+txtSName.getText()+" "+txtDName.getText());
-						parent.empsCB.setSelectedIndex(parent.empsCB.getItemCount()-1);
-						parent.posID.put(parent.empsCB.getItemCount()-1, toBeSaved.getID());
-						parent.empsCB.setEnabled(false);    //toto sa stura, kam by sa nemalo,,, ako na to?
+						parent.addNew(txtFName.getText()+" "+txtSName.getText()+" "+txtDName.getText(), toBeSaved.getID());
+						
 						dispose();
 					}
 				});

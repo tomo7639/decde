@@ -1,4 +1,4 @@
-package DBMS;
+package DBMS.Archive;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -11,11 +11,10 @@ import javax.swing.table.DefaultTableModel;
 
 import GPS.DandTime;
 
-public class AllReader {
-	
+public class ArchAllReader {
 	private Connection cnn;
-		
-	public AllReader(){
+	
+	public ArchAllReader(){
 		try {
 			cnn = DriverManager.getConnection(
 					"jdbc:postgresql://localhost:5432/ROUTE_DB", "postgres","VAVADBS"); 
@@ -32,18 +31,21 @@ public class AllReader {
 		
 		try {
 			Statement stmt = cnn.createStatement();
-			String statement = 	"SELECT emp_fname, emp_sname, emp_dname, rstart, rend, t.name, t2.name, kms, re.id, r.id FROM route r "+
-								"JOIN route_employee re ON r.id = re.route_id "+
-								"JOIN employee e ON e.id = re.employee_id "+
-								"JOIN(SELECT * FROM route_town "+
-								"	WHERE id IN (SELECT max(id) FROM route_town "+
+			String statement = 	"SELECT emp_fname, emp_sname, emp_dname, rstart, rend, t.name, t2.name, kms, re.id, r.id FROM arch_route r "+
+								"JOIN arch_route_employee re ON r.id = re.route_id "+
+								"JOIN arch_employee e ON e.id = re.employee_id "+
+								"JOIN(SELECT * FROM arch_route_town "+
+								"	WHERE id IN (SELECT max(id) FROM arch_route_town "+
 								"		GROUP BY route_id)) dest ON dest.route_id = r.id "+
 								"JOIN town t ON dest.town_id = t.id "+
-								"JOIN(SELECT * FROM route_town "+
-								"	WHERE id IN (SELECT min(id) FROM route_town "+
+								"JOIN(SELECT * FROM arch_route_town "+
+								"	WHERE id IN (SELECT min(id) FROM arch_route_town "+
 								"		GROUP BY route_id)) base ON base.route_id = r.id "+
 								"JOIN town t2 ON base.town_id = t2.id "+
 								"WHERE 1 = 1 ";
+			if (empID != null){statement += "AND e.id = "+empID+" ";}
+			if (dTownID != null){statement += "AND t.id = "+dTownID+" ";}
+			if (bTownID != null){statement += "AND t2.id = "+bTownID+" ";}
 			if (empID != null){  statement += "AND e.id = "+empID+" ";}
 			if (dTownID != null){statement += "AND t.id = "+dTownID+" ";}
 			if (bTownID != null){statement += "AND t2.id = "+bTownID+" ";}
@@ -51,6 +53,7 @@ public class AllReader {
 			if (!sTo.isNull()){  statement += "AND r.rstart < '"+sTo.getDT()+"' ";}
 			if (!eFrom.isNull()){statement += "AND r.rend > '"+eFrom.getDT()+"' ";}
 			if (!eTo.isNull()){  statement += "AND r.rend < '"+eTo.getDT()+"' ";}
+			
 			
 			Acc = stmt.executeQuery( statement );	
 							
