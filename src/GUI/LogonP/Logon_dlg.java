@@ -52,11 +52,11 @@ public class Logon_dlg extends JDialog {
 		}
 		
 		JLabel lblUserName = new JLabel("User name");
-		lblUserName.setBounds(44, 73, 82, 14);
+		lblUserName.setBounds(44, 73, 126, 14);
 		getContentPane().add(lblUserName);
 		
 		JLabel lblPassword = new JLabel("Password");
-		lblPassword.setBounds(44, 142, 46, 14);
+		lblPassword.setBounds(44, 142, 107, 14);
 		getContentPane().add(lblPassword);
 		
 		JLabel lblPleaseLogIn = new JLabel("Please log in with your user name and password");

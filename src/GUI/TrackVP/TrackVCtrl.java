@@ -14,24 +14,28 @@ import DBMS.RouteSaver;
 import DBMS.RtEmSaver;
 import DBMS.RtTwSaver;
 import DBMS.TownReader;
+import DBMS.Archive.ArchiveSaver;
 import GPS.Employee;
 import GPS.GpxDecoder;
 import GPS.Route;
 import GPS.Town;
 import GUI.SelectEmpl;
+import GUI.MainWP.MainWCtrl;
 
 public class TrackVCtrl {
 	
 	private TrackViewer view;
 	private int routeID;
+	private MainWCtrl parent;
 	
 	/**
 	 * Zobrazi nove okno s podrobnostami trasy
 	 * @param routeID ID trasy v databaze
 	 **/
-	public void displayMe(int routeID){
+	public void displayMe(int routeID, MainWCtrl parent){
 				
 		this.routeID = routeID;
+		this.parent = parent;
 			
 		view = new TrackViewer(routeID, this);
 		EventQueue.invokeLater(new Runnable() {			
@@ -120,15 +124,20 @@ public class TrackVCtrl {
 		else {
 			RES.deleteRow(toBeUpdatedID);
 			for (SelectEmpl e: emps){
-				RES.save(RES.getAutoIncrPK(), e.getPosID().get(e.getEmpsCB().getSelectedIndex()), toBeUpdatedID);					
-			}
-			
+				if(e.getPosID().get(e.getEmpsCB().getSelectedIndex()) != -1){
+					RES.save(RES.getAutoIncrPK(), e.getPosID().get(e.getEmpsCB().getSelectedIndex()), toBeUpdatedID);
+				}
+			}			
 		}
-		
-		view.dispose();	
+		ArchiveSaver AS = new ArchiveSaver(CE.getCnn());
+		AS.cleanUp();		
 		
 		CE.commit();
 		CE.closeCnn();
+		
+		view.dispose();	
+		parent.initialize();
+		parent.update();
 		
 	}
 }

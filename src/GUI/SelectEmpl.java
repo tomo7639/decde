@@ -47,11 +47,13 @@ public class SelectEmpl extends JPanel {
 		EmplReader ER = new EmplReader();
 		ArrayList<Employee> empls = ER.getAllEmpNames();
 		ER.closeCnn();
+		empsCB.addItem("null");
+		getPosID().put(0, -1);
 		for (int i=0;i<empls.size();i++){
 			Employee s = empls.get(i);
 			getEmpsCB().addItem(s.getFName()+" "+s.getSName()+" "+s.getDName());
-			getPosID().put(i, s.getID());
-			revPosID.put(s.getID(), i);
+			getPosID().put(i+1, s.getID());
+			revPosID.put(s.getID(), i+1);
 		}
 		add(getEmpsCB());
 		

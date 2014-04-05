@@ -32,7 +32,7 @@ public class TrackViewer extends JFrame {
 	 */
 	public TrackViewer(final int routeID, final TrackVCtrl ctrl) {
 		setTitle("Route data");
-		setBounds(100, 100, 638, 542);
+		setBounds(100, 100, 1039, 599);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -98,6 +98,14 @@ public class TrackViewer extends JFrame {
 		});
 		btnAddOther.setBounds(93, 213, 89, 23);
 		contentPane.add(btnAddOther);
+		
+		JButton btnPrint = new JButton("PRINT");
+		btnPrint.setBounds(10, 517, 329, 23);
+		contentPane.add(btnPrint);
+		
+		JLabel lblZTohtoBude = new JLabel("z tohto bude tabulka mesto - cas");
+		lblZTohtoBude.setBounds(359, 109, 275, 14);
+		contentPane.add(lblZTohtoBude);
 				
 	}
 		

@@ -48,6 +48,7 @@ public class MainW extends JFrame {
 	 * Create the frame.
 	 */
 	protected MainW(MainWCtrl controller) {
+		setTitle("Route Viewer 0.9");
 		
 		this.ctrl = controller;
 		
@@ -67,14 +68,14 @@ public class MainW extends JFrame {
 		JScrollPane scrollPaneRts = new JScrollPane();
 		scrollPaneRts.setBounds(10, 69, 842, 191);
 		contentPane.add(scrollPaneRts);
-		
+					
 		tableRts = new JTable();
 		tableRts.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				if (e.getClickCount() == 2){
 					TrackVCtrl tvs = new TrackVCtrl();
-					tvs.displayMe((int)tableRts.getValueAt(tableRts.rowAtPoint(e.getPoint()) ,0));
+					tvs.displayMe((int)tableRts.getValueAt(tableRts.rowAtPoint(e.getPoint()) ,0), ctrl);
 				}
 			}
 		});
@@ -99,17 +100,17 @@ public class MainW extends JFrame {
 		
 		empCB = new JComboBox<String>();
 		empCB.setModel(new DefaultComboBoxModel<String>(new String[] {"All"}));
-		empCB.setBounds(56, 48, 199, 20);
+		empCB.setBounds(86, 48, 193, 20);
 		contentPane.add(empCB);
 	
 		destCB = new JComboBox<String>();
 		destCB.setModel(new DefaultComboBoxModel<String>(new String[] {"All"}));
-		destCB.setBounds(586, 48, 96, 20);
+		destCB.setBounds(600, 48, 89, 20);
 		contentPane.add(destCB);
 				
 		baseCB = new JComboBox<String>();
 		baseCB.setModel(new DefaultComboBoxModel<String>(new String[] {"All"}));
-		baseCB.setBounds(683, 48, 96, 20);
+		baseCB.setBounds(692, 48, 87, 20);
 		contentPane.add(baseCB);		
 				
 		JButton btnFilter = new JButton("Filter");
@@ -189,7 +190,7 @@ public class MainW extends JFrame {
 		btnSendSelectedTo.setBounds(503, 271, 193, 23);
 		contentPane.add(btnSendSelectedTo);
 		
-		JButton btnViewArchive = new JButton("View archive");
+		JButton btnViewArchive = new JButton("View archive...");
 		btnViewArchive.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				ctrl.showArchive();
@@ -197,6 +198,31 @@ public class MainW extends JFrame {
 		});
 		btnViewArchive.setBounds(502, 305, 194, 23);
 		contentPane.add(btnViewArchive);
+		
+		JButton btnAddNew = new JButton("Add new...");
+		btnAddNew.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				ctrl.showAdder();
+			}
+		});
+		btnAddNew.setBounds(503, 386, 193, 23);
+		contentPane.add(btnAddNew);
+		
+		JLabel label = new JLabel("Begin");
+		label.setBounds(297, 33, 46, 14);
+		contentPane.add(label);
+		
+		JLabel label_1 = new JLabel("Begin");
+		label_1.setBounds(440, 33, 46, 14);
+		contentPane.add(label_1);
+		
+		JLabel label_2 = new JLabel("End");
+		label_2.setBounds(296, 51, 46, 14);
+		contentPane.add(label_2);
+		
+		JLabel label_3 = new JLabel("End");
+		label_3.setBounds(440, 51, 46, 14);
+		contentPane.add(label_3);
 				
 	}	
 }

@@ -15,6 +15,7 @@ import DBMS.Archive.ArchiveSaver;
 import GPS.DandTime;
 import GPS.Employee;
 import GPS.Town;
+import GUI.AddRtP.AddRoute_dlg;
 import GUI.ArchViewerP.ArchViewerCtrl;
 
 public class MainWCtrl {
@@ -130,5 +131,9 @@ public class MainWCtrl {
 	protected void showArchive(){
 		ArchViewerCtrl awc = new ArchViewerCtrl();
 		awc.displayMe(this);
+	}
+	
+	protected void showAdder(){
+		AddRoute_dlg.displayMe(this);
 	}
 }

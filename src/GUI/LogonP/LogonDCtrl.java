@@ -41,17 +41,17 @@ public class LogonDCtrl {
 			Statement stmt = lgFlow.createStatement();
 			ResultSet userAcc = stmt.executeQuery( "SELECT * FROM user_db WHERE u_id = '"+view.tf_uid.getText()+"'");
 			if ( userAcc.next() ) {
-				if (userAcc.getInt("u_pwd") != hash(view.tf_pwd.getText()) ){
-					 JOptionPane.showMessageDialog(null,"Wrong user name or passwd"+hash(view.tf_pwd.getText()));
-	          	     }	
-				else{
-					view.dispose();
+				if (userAcc.getInt("u_pwd") == hash(view.tf_pwd.getText()) ){
+	          		view.dispose();
 					MainWCtrl mwc = new MainWCtrl();
 					mwc.displayMe();
 				}
+				else{
+					JOptionPane.showMessageDialog(null,"Wrong user name or passwd");
+				}
 			}
 			else{
-				JOptionPane.showMessageDialog(null,"Wrong user name or passwd"+hash(view.tf_pwd.getText()));
+				JOptionPane.showMessageDialog(null,"Wrong user name or passwd");
 			}
 			
 		} catch (Exception e) {

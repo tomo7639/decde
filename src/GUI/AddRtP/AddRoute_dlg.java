@@ -1,4 +1,4 @@
-package GUI;
+package GUI.AddRtP;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -23,6 +23,8 @@ import DBMS.RtTwSaver;
 import GPS.GpxDecoder;
 import GPS.Route;
 import GPS.Town;
+import GUI.SelectEmpl;
+import GUI.MainWP.MainWCtrl;
 
 public class AddRoute_dlg extends JDialog {
 
@@ -33,6 +35,8 @@ public class AddRoute_dlg extends JDialog {
 	JButton btnAdd;
 	JPanel buttonPane;
 	ArrayList<SelectEmpl> emps = new ArrayList<SelectEmpl>();
+	
+	private MainWCtrl parent;
 	
 
 	/**
@@ -58,9 +62,10 @@ public class AddRoute_dlg extends JDialog {
 	 * Zobrazi nove okno a vrati referenciu 
 	 * @return
 	 */
-	public static AddRoute_dlg displayMe(){
+	public static AddRoute_dlg displayMe(MainWCtrl parent){
 		try {
 			AddRoute_dlg dialog = new AddRoute_dlg();
+			dialog.parent = parent;
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 			return dialog;
@@ -190,12 +195,17 @@ public class AddRoute_dlg extends JDialog {
 	
 		RtEmSaver RES = new RtEmSaver(CE.getCnn());
 		for (SelectEmpl e: emps){
-			RES.save(RES.getAutoIncrPK(), e.getPosID().get(e.getEmpsCB().getSelectedIndex()), rtToBeSaved.getID());					
+			if(e.getPosID().get(e.getEmpsCB().getSelectedIndex()) != -1){
+				RES.save(RES.getAutoIncrPK(), e.getPosID().get(e.getEmpsCB().getSelectedIndex()), rtToBeSaved.getID());					
+			}
 		}
 		dispose();	
 		
 		CE.commit();
 		CE.closeCnn();
+		
+		parent.initialize();
+		parent.update();
 		
 	}
 }

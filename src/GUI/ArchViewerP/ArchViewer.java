@@ -16,6 +16,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
 import com.toedter.calendar.JDateChooser;
+import javax.swing.JLabel;
 
 public class ArchViewer extends JFrame {
 
@@ -35,12 +36,17 @@ public class ArchViewer extends JFrame {
 	protected JButton btnBringSelectedBack;
 	
 	protected ArchViewerCtrl ctrl;
+	private JLabel label;
+	private JLabel label_1;
+	private JLabel label_2;
+	private JLabel label_3;
 
 	
 	/**
 	 * Create the frame.
 	 */
 	public ArchViewer(final ArchViewerCtrl ctrl) {
+		setTitle("Archive");
 		
 		this.ctrl=ctrl;
 		
@@ -82,17 +88,17 @@ public class ArchViewer extends JFrame {
 		
 		empCB = new JComboBox<String>();
 		empCB.setModel(new DefaultComboBoxModel<String>(new String[] {"All"}));
-		empCB.setBounds(56, 48, 199, 20);
+		empCB.setBounds(85, 48, 197, 20);
 		contentPane.add(empCB);
 						
 		destCB = new JComboBox<String>();
 		destCB.setModel(new DefaultComboBoxModel<String>(new String[] {"All"}));
-		destCB.setBounds(586, 48, 96, 20);
+		destCB.setBounds(597, 48, 89, 20);
 		contentPane.add(destCB);
 				
 		baseCB = new JComboBox<String>();
 		baseCB.setModel(new DefaultComboBoxModel<String>(new String[] {"All"}));
-		baseCB.setBounds(683, 48, 96, 20);
+		baseCB.setBounds(691, 48, 96, 20);
 		contentPane.add(baseCB);		
 				
 		JButton btnFilter = new JButton("Filter");
@@ -129,6 +135,22 @@ public class ArchViewer extends JFrame {
 		});
 		btnBringSelectedBack.setBounds(10, 271, 190, 23);
 		contentPane.add(btnBringSelectedBack);
+		
+		label = new JLabel("Begin");
+		label.setBounds(293, 28, 46, 14);
+		contentPane.add(label);
+		
+		label_1 = new JLabel("End");
+		label_1.setBounds(292, 46, 46, 14);
+		contentPane.add(label_1);
+		
+		label_2 = new JLabel("Begin");
+		label_2.setBounds(456, 27, 46, 14);
+		contentPane.add(label_2);
+		
+		label_3 = new JLabel("End");
+		label_3.setBounds(456, 45, 46, 14);
+		contentPane.add(label_3);
 
 	}
 	
